@@ -1,0 +1,8 @@
+package interfaces;
+import java.util.ArrayList;
+import modelo.Articulo;
+
+public interface Exportador { 
+	void exportar(ArrayList<Articulo> lista);
+}
+

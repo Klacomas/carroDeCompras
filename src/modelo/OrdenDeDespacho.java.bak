@@ -1,0 +1,175 @@
+package modelo;
+
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import implementaciones.ExportadorExcel;
+
+public class OrdenDeDespacho implements Documento {
+	protected String cliente;
+	protected ArrayList<Articulo> listaArticulos;
+	protected String direccionDespacho;
+	protected int montoTotal;
+	protected Date fechaCompra;
+	protected String receptor;
+	
+
+
+	public OrdenDeDespacho(String cliente, ArrayList<Articulo> listaArticulos, String direccionDespacho, int montoTotal,
+			Date fechaCompra, String receptor) {
+		super();
+		this.cliente = cliente;
+		this.listaArticulos = listaArticulos;
+		this.direccionDespacho = direccionDespacho;
+		this.montoTotal = montoTotal;
+		this.fechaCompra = fechaCompra;
+		this.receptor = receptor;
+	}
+
+
+	public OrdenDeDespacho() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	@Override
+	public boolean generar() {
+		HSSFWorkbook libro = new HSSFWorkbook();
+		HSSFSheet hoja = libro.createSheet();
+		String fechaHoyString = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+		for(int i=0; i<this.listaArticulos.size();i++) {
+			HSSFRow fila = hoja.createRow(i);
+			Articulo articulo = this.listaArticulos.get(i);
+			HSSFCell celda = fila.createCell((short)0);
+			celda.setCellValue(articulo.getClass().getSimpleName());
+			celda = fila.createCell((short)1);
+			celda.setCellValue(String.valueOf(articulo.getPrecio()));
+			celda = fila.createCell((short)2);
+			celda.setCellValue(articulo.getNombre().toString());
+			celda = fila.createCell((short)3);
+			celda.setCellValue((articulo.getCodigo()));
+			celda = fila.createCell((short)4);
+			celda.setCellValue((String.valueOf(articulo.getTalla())));
+			celda = fila.createCell((short)5);
+			celda.setCellValue((articulo.getMarca()));
+			celda = fila.createCell((short)6);
+			celda.setCellValue((String.valueOf(articulo.getMarca())));
+			celda = fila.createCell((short)7);
+			if(articulo.getClass().getSimpleName().equals("Zapato")){
+				Zapato zapato = (Zapato) articulo;
+				celda.setCellValue((String.valueOf(zapato.getModelo())));
+			}else {
+				celda.setCellValue(String.valueOf("-"));
+				
+			}
+			celda = fila.createCell((short)8);
+			if(articulo.getClass().getSimpleName().equals("Pantalon")){
+				Pantalon pantalon = (Pantalon) articulo;
+				celda.setCellValue((String.valueOf(pantalon.getColor())));
+			}else if (articulo.getClass().getSimpleName().equals("Polera")){
+				Polera polera = (Polera) articulo;
+				celda.setCellValue((String.valueOf(polera.getColor())));
+			}else {
+				celda.setCellValue(String.valueOf("-"));				
+			}
+			
+			celda = fila.createCell((short)7);
+			if(articulo.getClass().getSimpleName().equals("Pantalon")){
+				Pantalon pantalon = (Pantalon) articulo;
+				celda.setCellValue((String.valueOf(pantalon.getNroBolsillos())));
+			}else {
+				celda.setCellValue(String.valueOf("-"));
+				
+			}
+
+		}
+		try {
+			FileOutputStream elFichero =
+				new FileOutputStream("Orden_De_Despacho"+fechaHoyString+"_.xls");
+			libro.write(elFichero);
+			elFichero.close();
+			libro.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			libro.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+			}
+		return false;
+		}
+
+	public String getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(String cliente) {
+		this.cliente = cliente;
+	}
+
+	public ArrayList<Articulo> getListaArticulos() {
+		return listaArticulos;
+	}
+
+	public void setListaArticulos(ArrayList<Articulo> listaArticulos) {
+		this.listaArticulos = listaArticulos;
+	}
+
+
+	public String getDireccionDespacho() {
+		return direccionDespacho;
+	}
+
+
+	public void setDireccionDespacho(String direccionDespacho) {
+		this.direccionDespacho = direccionDespacho;
+	}
+
+
+	public int getMontoTotal() {
+		return montoTotal;
+	}
+
+
+	public void setMontoTotal(int montoTotal) {
+		this.montoTotal = montoTotal;
+	}
+
+
+	public Date getFechaCompra() {
+		return fechaCompra;
+	}
+
+
+	public void setFechaCompra(Date fechaCompra) {
+		this.fechaCompra = fechaCompra;
+	}
+
+
+	public String getReceptor() {
+		return receptor;
+	}
+
+
+	public void setReceptor(String receptor) {
+		this.receptor = receptor;
+	}
+
+
+	@Override
+	public String toString() {
+		return "OrdenDeDespacho [cliente=" + cliente + ", listaArticulos=" + listaArticulos + ", direccionDespacho="
+				+ direccionDespacho + ", montoTotal=" + montoTotal + ", receptor=" + receptor + "]";
+	}
+
+}

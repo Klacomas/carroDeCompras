@@ -1,0 +1,2 @@
+formatoSalida=xls;
+rutaSalida=C:\Users\DELL\Desktop\JO\ExportadorArchivo;
